@@ -1,0 +1,27 @@
+[common]
+wifi_channel = 161
+wifi_region = '00'
+
+[drone]
+link_domain = 'openipc-analog-fpv'
+
+[gs]
+link_domain = 'openipc-analog-fpv'
+
+[drone_video]
+peer = 'listen://0.0.0.0:5602'
+bandwidth = 20
+short_gi = False
+stbc = 1
+mcs_index = 1
+fec_k = 8
+fec_n = 12
+
+[gs_video]
+peer = 'connect://127.0.0.1:5600'
+bandwidth = 20
+short_gi = False
+stbc = 1
+mcs_index = 1
+fec_k = 8
+fec_n = 12

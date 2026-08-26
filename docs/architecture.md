@@ -24,6 +24,10 @@ Initial TX video flow:
 /dev/video0 -> ffmpeg/gstreamer -> udp://127.0.0.1:5602 -> wfb-ng TX -> WiFi radio
 ```
 
+The repository starts with an `ffmpeg` software encoder because it is easy to validate on
+almost any Linux image. Once the Radxa hardware is available, the TX can be upgraded to a
+Rockchip MPP/GStreamer hardware encoder profile if the installed image exposes it.
+
 ### RX: OpenIPC GroundStation
 
 The RX Radxa should use the upstream OpenIPC SBC GroundStation image. It already contains
@@ -64,3 +68,17 @@ video stream to HDMI or Ethernet.
 - Exact Realtek chipset: RTL8812AU, RTL8812EU, RTL8812BU, or another variant.
 - Whether the selected Radxa image has working Rockchip hardware encoding.
 - Practical latency with USB CVBS capture and software vs hardware encoding.
+
+## First Radio Target
+
+Use conservative parameters first:
+
+- 5 GHz channel 161;
+- 20 MHz bandwidth;
+- MCS 1;
+- STBC enabled where the driver supports it;
+- 720x576 or 640x480 at 25/30 fps from CVBS;
+- 2.5 Mbit/s video bitrate.
+
+After the link is stable on the bench, raise bitrate, channel width, or frame rate one
+parameter at a time.

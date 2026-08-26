@@ -59,3 +59,58 @@ The first software encoder prototype is in:
 ```text
 tx/start-video-tx.sh
 ```
+
+## Install The TX Layer
+
+Clone this repository on the TX Radxa and run:
+
+```bash
+sudo ./tx/install-tx.sh
+```
+
+The installer copies scripts to `/opt/openipc-fpv/tx`, installs systemd units, writes an
+example `/etc/default/openipc-video-tx`, and writes a conservative drone-side
+`/etc/wifibroadcast.cfg` if one does not already exist.
+
+Before enabling the service, inspect:
+
+```bash
+sudo nano /etc/default/openipc-video-tx
+sudo nano /etc/wifibroadcast.cfg
+sudo nano /etc/default/wifibroadcast
+```
+
+Then run the preflight:
+
+```bash
+sudo /opt/openipc-fpv/tx/tx-preflight.sh
+```
+
+Enable:
+
+```bash
+sudo systemctl enable --now openipc-video-tx.service
+sudo systemctl enable --now openipc-wfb-tx.service
+```
+
+Follow logs:
+
+```bash
+journalctl -u openipc-video-tx.service -f
+journalctl -u openipc-wfb-tx.service -f
+```
+
+## Expected Ports
+
+The local encoder sends RTP video to:
+
+```text
+127.0.0.1:5602
+```
+
+wfb-ng drone mode listens on the same port through:
+
+```ini
+[drone_video]
+peer = 'listen://0.0.0.0:5602'
+```

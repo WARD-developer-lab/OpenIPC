@@ -1,0 +1,6 @@
+# Space-separated WiFi interfaces dedicated to wfb-ng.
+# Example: WFB_NICS="wlan1"
+WFB_NICS="wlan0"
+
+# Keep the radio interface unmanaged by NetworkManager/wpa_supplicant.
+# The exact mechanism depends on the base OS image.

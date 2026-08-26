@@ -25,3 +25,9 @@ For Linux, the useful abstraction is:
 ```text
 USB CVBS capture == webcam-like V4L2 source
 ```
+
+## TX USB Port Planning
+
+The TX Radxa needs both the USB capture device and the RTL8812AU radio. Use a powered USB
+hub where possible. The radio can draw enough current to brown out small SBC boards,
+especially during transmit.

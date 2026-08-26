@@ -24,3 +24,20 @@ RTL8812AU radio -> OpenIPC SBC GroundStation / wfb-ng RX
 
 Start with [docs/architecture.md](docs/architecture.md), then use the TX and RX bring-up
 checklists under [docs/](docs/).
+
+## TX Install Preview
+
+On the TX Radxa, after installing a minimal Debian/Radxa OS and cloning this repository:
+
+```bash
+sudo ./tx/install-tx.sh
+sudo reboot
+```
+
+The TX role is configured through:
+
+```text
+/etc/default/openipc-video-tx
+/etc/wifibroadcast.cfg
+/etc/default/wifibroadcast
+```

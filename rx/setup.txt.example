@@ -1,0 +1,13 @@
+# OpenIPC SBC GroundStation example config for Radxa Zero 3W/E beta 2.
+
+[screen mode]
+screen_mode = 1280x720@60
+
+[dvr recording]
+rec_fps = 60
+
+[gpio]
+gpio_layout = Ruby
+
+[msposd]
+osd = air

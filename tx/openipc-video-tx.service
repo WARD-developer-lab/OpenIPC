@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenIPC analog video TX pipeline
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/openipc-video-tx
+ExecStart=/opt/openipc-fpv/tx/start-video-tx.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

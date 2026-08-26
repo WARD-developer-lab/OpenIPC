@@ -22,6 +22,10 @@ If packages are missing:
 sudo /opt/openipc-fpv/tx/install-tx-deps.sh
 ```
 
+Do not install GStreamer development packages on the Radxa Bullseye image unless we are
+specifically building the full RTSP-enabled wfb-ng Debian package. The first TX path uses
+`ffmpeg` and standalone `wfb_tx`, so those packages are unnecessary.
+
 ## Configure Camera
 
 Edit:
@@ -101,7 +105,7 @@ Do not start the link until the preflight sees:
 - Realtek WiFi adapter;
 - `/etc/drone.key`;
 - `/etc/wifibroadcast.cfg`;
-- `wifibroadcast@.service`.
+- `wfb_tx` or `wifibroadcast@.service`.
 
 ## Start
 

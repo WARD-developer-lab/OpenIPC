@@ -16,14 +16,20 @@ apt-get update
 apt-get install -y \
   ca-certificates \
   ffmpeg \
+  g++ \
+  gcc \
   git \
   iproute2 \
   iw \
+  libevent-dev \
+  libpcap-dev \
+  libsodium-dev \
+  make \
   v4l-utils \
   wireless-tools
 
 echo
 echo "Base TX packages installed."
 echo "Still required separately:"
-echo "  - wfb-ng"
+echo "  - wfb-ng binaries, install with /opt/openipc-fpv/tx/install-wfb-ng-standalone.sh"
 echo "  - WFB-capable RTL8812AU/RTL8812EU driver for your kernel"

@@ -39,10 +39,12 @@ ip link || true
 
 echo
 echo "== wfb-ng =="
-if systemctl list-unit-files 'wifibroadcast@.service' >/dev/null 2>&1; then
+if command -v wfb_tx >/dev/null 2>&1; then
+  echo "OK: wfb_tx"
+elif systemctl list-unit-files 'wifibroadcast@.service' >/dev/null 2>&1; then
   echo "OK: wifibroadcast@.service exists"
 else
-  echo "MISSING: wifibroadcast@.service"
+  echo "MISSING: wfb_tx or wifibroadcast@.service"
   fail=1
 fi
 

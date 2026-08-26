@@ -2,5 +2,16 @@
 # Example: WFB_NICS="wlan1"
 WFB_NICS="wlan0"
 
+# Standalone TX defaults used by tx/start-wfb-tx.sh.
+WFB_KEY="/etc/drone.key"
+WFB_UDP_PORT="5602"
+WFB_RADIO_PORT="0"
+WFB_CHANNEL="161"
+WFB_BANDWIDTH="20"
+WFB_GI="long"
+WFB_STBC="1"
+WFB_LDPC="0"
+WFB_MCS="1"
+
 # Keep the radio interface unmanaged by NetworkManager/wpa_supplicant.
 # The exact mechanism depends on the base OS image.

@@ -46,6 +46,12 @@ stop_wifi_managers() {
 
 set_monitor_mode() {
   local iface="$1"
+  local current_type=""
+
+  current_type="$(iw dev "$iface" info 2>/dev/null | awk '/type/ {print $2; exit}')"
+  if [ "$current_type" = "monitor" ]; then
+    return 0
+  fi
 
   ip link set "$iface" nomaster >/dev/null 2>&1 || true
   ip addr flush dev "$iface" >/dev/null 2>&1 || true

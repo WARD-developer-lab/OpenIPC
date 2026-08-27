@@ -11,6 +11,7 @@ repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 install -d /opt/openipc-fpv/tx
 install -m 0755 "$repo_dir/tx/detect-camera.sh" /opt/openipc-fpv/tx/detect-camera.sh
 install -m 0755 "$repo_dir/tx/start-video-tx.sh" /opt/openipc-fpv/tx/start-video-tx.sh
+install -m 0755 "$repo_dir/tx/start-test-video.sh" /opt/openipc-fpv/tx/start-test-video.sh
 install -m 0755 "$repo_dir/tx/start-wfb-tx.sh" /opt/openipc-fpv/tx/start-wfb-tx.sh
 install -m 0755 "$repo_dir/tx/tx-preflight.sh" /opt/openipc-fpv/tx/tx-preflight.sh
 install -m 0755 "$repo_dir/tx/install-tx-deps.sh" /opt/openipc-fpv/tx/install-tx-deps.sh

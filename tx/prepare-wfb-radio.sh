@@ -44,6 +44,18 @@ stop_wifi_managers() {
   pkill -x dhcpcd >/dev/null 2>&1 || true
 }
 
+reload_radio_driver() {
+  local before="$1"
+
+  echo "Reloading RTL8812AU driver"
+  ip link set "$before" down >/dev/null 2>&1 || true
+  modprobe -r 88XXau_wfb >/dev/null 2>&1 || true
+  modprobe -r 88XXau >/dev/null 2>&1 || true
+  sleep 2
+  modprobe 88XXau_wfb >/dev/null 2>&1 || modprobe 88XXau >/dev/null 2>&1 || true
+  sleep 4
+}
+
 get_phy() {
   local dev="$1"
   local phy_path=""
@@ -71,11 +83,25 @@ iw dev "$iface" del >/dev/null 2>&1 || true
 sleep 1
 
 if ip link show "$iface" >/dev/null 2>&1; then
-  echo "Could not delete $iface. Unplug/replug the WiFi adapter and retry." >&2
-  exit 1
+  reload_radio_driver "$iface"
+  iface="$(iw dev 2>/dev/null | awk '/Interface/ {print $2; exit}')"
+  if [ -z "$iface" ]; then
+    echo "No WiFi interface found after driver reload. Unplug/replug the WiFi adapter and retry." >&2
+    exit 1
+  fi
+  phy="$(get_phy "$iface")"
+  ip link set "$iface" down >/dev/null 2>&1 || true
+  iw dev "$iface" del >/dev/null 2>&1 || true
+  sleep 1
 fi
 
-iw phy "$phy" interface add "$iface" type monitor
+monitor_iface="$iface"
+if ip link show "$iface" >/dev/null 2>&1; then
+  monitor_iface="wfb0"
+fi
+
+iw phy "$phy" interface add "$monitor_iface" type monitor
+iface="$monitor_iface"
 ip link set "$iface" up
 iw dev "$iface" set channel "$channel" "$channel_mode"
 

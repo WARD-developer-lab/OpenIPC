@@ -33,6 +33,7 @@ if [ -d /etc/NetworkManager/conf.d ]; then
 [keyfile]
 unmanaged-devices=interface-name:${iface}
 EOF
+  nmcli device set "$iface" managed no >/dev/null 2>&1 || true
   systemctl reload NetworkManager 2>/dev/null || true
 fi
 
@@ -40,6 +41,8 @@ if [ -f /etc/dhcpcd.conf ] && ! grep -q "denyinterfaces ${iface}" /etc/dhcpcd.co
   printf '\ndenyinterfaces %s\n' "$iface" >> /etc/dhcpcd.conf
 fi
 
+systemctl stop "wpa_supplicant@${iface}.service" >/dev/null 2>&1 || true
+systemctl stop wpa_supplicant.service >/dev/null 2>&1 || true
 ip link set "$iface" down || true
 
 echo "Configured $iface for wfb-ng use."

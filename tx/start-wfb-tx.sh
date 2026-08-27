@@ -16,6 +16,7 @@ WFB_GI="${WFB_GI:-long}"
 WFB_STBC="${WFB_STBC:-1}"
 WFB_LDPC="${WFB_LDPC:-0}"
 WFB_MCS="${WFB_MCS:-1}"
+WFB_CHANNEL_MODE="${WFB_CHANNEL_MODE:-HT20}"
 
 if [ -z "$WFB_NICS" ]; then
   echo "WFB_NICS is empty. Edit /etc/default/wifibroadcast." >&2
@@ -33,9 +34,30 @@ if ! command -v wfb_tx >/dev/null 2>&1; then
 fi
 
 for iface in $WFB_NICS; do
+  echo "Preparing $iface for wfb-ng TX"
+
+  if command -v rfkill >/dev/null 2>&1; then
+    rfkill unblock wifi || true
+  fi
+
+  if command -v nmcli >/dev/null 2>&1; then
+    nmcli device set "$iface" managed no >/dev/null 2>&1 || true
+    nmcli device disconnect "$iface" >/dev/null 2>&1 || true
+  fi
+
+  systemctl stop "wpa_supplicant@${iface}.service" >/dev/null 2>&1 || true
+  systemctl stop wpa_supplicant.service >/dev/null 2>&1 || true
+
   ip link set "$iface" down || true
-  iw dev "$iface" set type monitor
-  iw dev "$iface" set channel "$WFB_CHANNEL" HT20
+  sleep 1
+
+  if ! iw dev "$iface" set type monitor; then
+    echo "Could not switch $iface to monitor mode. It may still be busy." >&2
+    echo "Try unplugging/replugging the WiFi adapter, then start this service again." >&2
+    exit 1
+  fi
+
+  iw dev "$iface" set channel "$WFB_CHANNEL" "$WFB_CHANNEL_MODE"
   ip link set "$iface" up
 done
 

@@ -1,13 +1,13 @@
 [Unit]
 Description=OpenIPC WFB-ng TX profile
-After=network-online.target openipc-video-tx.service
-Wants=network-online.target openipc-video-tx.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 ExecStart=/opt/openipc-fpv/tx/start-wfb-tx.sh
-ExecStop=/bin/systemctl stop wifibroadcast@drone.service
+Restart=always
+RestartSec=2
 
 [Install]
 WantedBy=multi-user.target

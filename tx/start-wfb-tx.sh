@@ -33,6 +33,31 @@ if ! command -v wfb_tx >/dev/null 2>&1; then
   exit 1
 fi
 
+stop_wifi_managers() {
+  systemctl stop NetworkManager.service >/dev/null 2>&1 || true
+  systemctl stop wpa_supplicant.service >/dev/null 2>&1 || true
+  pkill -x NetworkManager >/dev/null 2>&1 || true
+  pkill -x wpa_supplicant >/dev/null 2>&1 || true
+}
+
+set_monitor_mode() {
+  local iface="$1"
+
+  ip link set "$iface" nomaster >/dev/null 2>&1 || true
+  ip addr flush dev "$iface" >/dev/null 2>&1 || true
+  ip link set "$iface" down || true
+  sleep 1
+
+  if iw dev "$iface" set type monitor; then
+    return 0
+  fi
+
+  stop_wifi_managers
+  ip link set "$iface" down || true
+  sleep 2
+  iw dev "$iface" set type monitor
+}
+
 for iface in $WFB_NICS; do
   echo "Preparing $iface for wfb-ng TX"
 
@@ -46,12 +71,9 @@ for iface in $WFB_NICS; do
   fi
 
   systemctl stop "wpa_supplicant@${iface}.service" >/dev/null 2>&1 || true
-  systemctl stop wpa_supplicant.service >/dev/null 2>&1 || true
+  stop_wifi_managers
 
-  ip link set "$iface" down || true
-  sleep 1
-
-  if ! iw dev "$iface" set type monitor; then
+  if ! set_monitor_mode "$iface"; then
     echo "Could not switch $iface to monitor mode. It may still be busy." >&2
     echo "Try unplugging/replugging the WiFi adapter, then start this service again." >&2
     exit 1

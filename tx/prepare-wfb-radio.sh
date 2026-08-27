@@ -80,7 +80,7 @@ fi
 
 ip link set "$iface" down >/dev/null 2>&1 || true
 
-if iw dev "$iface" set type monitor >/dev/null 2>&1; then
+if iw dev "$iface" set monitor otherbss >/dev/null 2>&1; then
   monitor_iface="$iface"
 else
   iw dev "$iface" del >/dev/null 2>&1 || true
@@ -96,7 +96,7 @@ else
     phy="$(get_phy "$iface")"
     ip link set "$iface" down >/dev/null 2>&1 || true
 
-    if iw dev "$iface" set type monitor >/dev/null 2>&1; then
+    if iw dev "$iface" set monitor otherbss >/dev/null 2>&1; then
       monitor_iface="$iface"
     else
       iw dev "$iface" del >/dev/null 2>&1 || true

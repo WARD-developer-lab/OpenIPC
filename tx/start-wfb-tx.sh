@@ -58,7 +58,7 @@ set_monitor_mode() {
   ip link set "$iface" down || true
   sleep 1
 
-  if iw dev "$iface" set type monitor; then
+  if iw dev "$iface" set monitor otherbss; then
     return 0
   fi
 
@@ -66,7 +66,7 @@ set_monitor_mode() {
   ip link set "$iface" down || true
   sleep 2
 
-  if iw dev "$iface" set type monitor; then
+  if iw dev "$iface" set monitor otherbss; then
     return 0
   fi
 

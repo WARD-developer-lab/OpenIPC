@@ -36,8 +36,12 @@ fi
 stop_wifi_managers() {
   systemctl stop NetworkManager.service >/dev/null 2>&1 || true
   systemctl stop wpa_supplicant.service >/dev/null 2>&1 || true
+  systemctl stop dhcpcd.service >/dev/null 2>&1 || true
+  systemctl stop networking.service >/dev/null 2>&1 || true
   pkill -x NetworkManager >/dev/null 2>&1 || true
   pkill -x wpa_supplicant >/dev/null 2>&1 || true
+  pkill -x dhclient >/dev/null 2>&1 || true
+  pkill -x dhcpcd >/dev/null 2>&1 || true
 }
 
 set_monitor_mode() {
@@ -55,7 +59,17 @@ set_monitor_mode() {
   stop_wifi_managers
   ip link set "$iface" down || true
   sleep 2
-  iw dev "$iface" set type monitor
+
+  if iw dev "$iface" set type monitor; then
+    return 0
+  fi
+
+  if command -v iwconfig >/dev/null 2>&1; then
+    iwconfig "$iface" mode monitor
+    return 0
+  fi
+
+  return 1
 }
 
 for iface in $WFB_NICS; do

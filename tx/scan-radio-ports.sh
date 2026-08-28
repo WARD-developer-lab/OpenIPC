@@ -43,7 +43,12 @@ while true; do
       fi
     fi
 
-    timeout --foreground "${seconds}" /opt/openipc-fpv/tx/run-tx-test.sh test "$port" || status="$?"
+    systemctl stop openipc-tx-test-link.service >/dev/null 2>&1 || true
+    systemctl stop openipc-wfb-tx.service >/dev/null 2>&1 || true
+    systemctl reset-failed openipc-tx-test-link.service >/dev/null 2>&1 || true
+    systemctl reset-failed openipc-wfb-tx.service >/dev/null 2>&1 || true
+
+    TX_AUTOSTART_RADIO_PORT="$port" timeout --foreground "${seconds}" /opt/openipc-fpv/tx/start-tx-test-link.sh test || status="$?"
     status="${status:-0}"
 
     if [ "$status" != "124" ] && [ "$status" != "130" ] && [ "$status" != "143" ] && [ "$status" != "0" ]; then

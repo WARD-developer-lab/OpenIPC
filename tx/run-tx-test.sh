@@ -21,6 +21,11 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 echo "== OpenIPC TX quick test =="
+systemctl stop openipc-tx-test-link.service >/dev/null 2>&1 || true
+systemctl stop openipc-wfb-tx.service >/dev/null 2>&1 || true
+systemctl reset-failed openipc-tx-test-link.service >/dev/null 2>&1 || true
+systemctl reset-failed openipc-wfb-tx.service >/dev/null 2>&1 || true
+
 if [ -n "$radio_port" ]; then
   if [ -f /etc/default/wifibroadcast ]; then
     if grep -q '^WFB_RADIO_PORT=' /etc/default/wifibroadcast; then

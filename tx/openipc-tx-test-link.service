@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenIPC TX automatic test link
+After=multi-user.target
+
+[Service]
+Type=simple
+Environment=TX_AUTOSTART_MODE=test
+ExecStart=/opt/openipc-fpv/tx/start-tx-test-link.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

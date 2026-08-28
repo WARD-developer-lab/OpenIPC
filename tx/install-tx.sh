@@ -32,6 +32,8 @@ fi
 
 if [ ! -f /etc/default/wifibroadcast ]; then
   install -m 0644 "$repo_dir/tx/wifibroadcast.default.example" /etc/default/wifibroadcast
+elif grep -q '^WFB_RADIO_PORT="0"' /etc/default/wifibroadcast; then
+  sed -i 's/^WFB_RADIO_PORT="0"/WFB_RADIO_PORT="3"/' /etc/default/wifibroadcast
 fi
 
 systemctl daemon-reload

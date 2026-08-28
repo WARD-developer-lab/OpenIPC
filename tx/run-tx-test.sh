@@ -9,6 +9,15 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 mode="${1:-test}"
+video_pid=""
+
+cleanup() {
+  if [ -n "$video_pid" ] && kill -0 "$video_pid" >/dev/null 2>&1; then
+    kill "$video_pid" >/dev/null 2>&1 || true
+  fi
+}
+
+trap cleanup EXIT INT TERM
 
 echo "== OpenIPC TX quick test =="
 echo "Preparing radio"
@@ -31,8 +40,21 @@ echo
 
 case "$mode" in
   test)
-    echo "Starting synthetic test video. Stop with Ctrl+C."
-    exec /opt/openipc-fpv/tx/start-test-video.sh
+    echo "Starting synthetic test video"
+    /opt/openipc-fpv/tx/start-test-video.sh >/tmp/openipc-test-video.log 2>&1 &
+    video_pid="$!"
+    sleep 2
+
+    if ! kill -0 "$video_pid" >/dev/null 2>&1; then
+      echo "Test video failed:" >&2
+      tail -40 /tmp/openipc-test-video.log >&2 || true
+      exit 1
+    fi
+
+    echo
+    echo "Test video is running. Watching radio packets."
+    echo "PKT must become non-zero. Stop with Ctrl+C."
+    journalctl -u openipc-wfb-tx.service -f --no-pager
     ;;
   camera)
     echo "Starting camera video service"

@@ -15,6 +15,7 @@ install -m 0755 "$repo_dir/tx/start-test-video.sh" /opt/openipc-fpv/tx/start-tes
 install -m 0755 "$repo_dir/tx/start-wfb-tx.sh" /opt/openipc-fpv/tx/start-wfb-tx.sh
 install -m 0755 "$repo_dir/tx/start-tx-test-link.sh" /opt/openipc-fpv/tx/start-tx-test-link.sh
 install -m 0755 "$repo_dir/tx/run-tx-test.sh" /opt/openipc-fpv/tx/run-tx-test.sh
+install -m 0755 "$repo_dir/tx/scan-radio-ports.sh" /opt/openipc-fpv/tx/scan-radio-ports.sh
 install -m 0755 "$repo_dir/tx/enable-tx-autostart.sh" /opt/openipc-fpv/tx/enable-tx-autostart.sh
 install -m 0755 "$repo_dir/tx/restore-internet.sh" /opt/openipc-fpv/tx/restore-internet.sh
 install -m 0755 "$repo_dir/tx/tx-preflight.sh" /opt/openipc-fpv/tx/tx-preflight.sh
@@ -50,9 +51,10 @@ echo "  4. Run /opt/openipc-fpv/tx/prepare-wfb-radio.sh wlanX for that interface
 echo "  5. Copy matching /etc/drone.key and /etc/gs.key from the same wfb_keygen run."
 echo "  6. Run: /opt/openipc-fpv/tx/tx-preflight.sh"
 echo "  7. Quick test with: /opt/openipc-fpv/tx/run-tx-test.sh"
-echo "  8. Enable TX autostart with:"
+echo "  8. Scan radio ports with: /opt/openipc-fpv/tx/scan-radio-ports.sh 30"
+echo "  9. Enable TX autostart with:"
 echo "       systemctl enable --now openipc-tx-test-link.service"
 echo "       or: /opt/openipc-fpv/tx/enable-tx-autostart.sh test"
-echo "  9. Enable camera services with:"
+echo "  10. Enable camera services with:"
 echo "       systemctl enable --now openipc-video-tx.service"
 echo "       systemctl enable --now openipc-wfb-tx.service"

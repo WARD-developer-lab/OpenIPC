@@ -9,6 +9,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 mode="${1:-test}"
+radio_port="${2:-}"
 video_pid=""
 
 cleanup() {
@@ -20,6 +21,17 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 echo "== OpenIPC TX quick test =="
+if [ -n "$radio_port" ]; then
+  if [ -f /etc/default/wifibroadcast ]; then
+    if grep -q '^WFB_RADIO_PORT=' /etc/default/wifibroadcast; then
+      sed -i "s/^WFB_RADIO_PORT=.*/WFB_RADIO_PORT=\"${radio_port}\"/" /etc/default/wifibroadcast
+    else
+      printf '\nWFB_RADIO_PORT="%s"\n' "$radio_port" >> /etc/default/wifibroadcast
+    fi
+  fi
+  echo "Using WFB radio port ${radio_port}"
+fi
+
 echo "Preparing radio"
 /opt/openipc-fpv/tx/prepare-wfb-radio.sh
 
@@ -63,7 +75,7 @@ case "$mode" in
     systemctl status openipc-video-tx.service --no-pager
     ;;
   *)
-    echo "Usage: $0 [test|camera]" >&2
+    echo "Usage: $0 [test|camera] [radio_port]" >&2
     exit 1
     ;;
 esac

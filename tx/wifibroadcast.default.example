@@ -5,7 +5,7 @@ WFB_NICS="wlan0"
 # Standalone TX defaults used by tx/start-wfb-tx.sh.
 WFB_KEY="/etc/drone.key"
 WFB_UDP_PORT="5602"
-WFB_RADIO_PORT="3"
+WFB_RADIO_PORT="0"
 WFB_CHANNEL="161"
 WFB_BANDWIDTH="20"
 WFB_GI="long"

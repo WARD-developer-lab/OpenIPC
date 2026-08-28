@@ -13,6 +13,7 @@ install -m 0755 "$repo_dir/tx/detect-camera.sh" /opt/openipc-fpv/tx/detect-camer
 install -m 0755 "$repo_dir/tx/start-video-tx.sh" /opt/openipc-fpv/tx/start-video-tx.sh
 install -m 0755 "$repo_dir/tx/start-test-video.sh" /opt/openipc-fpv/tx/start-test-video.sh
 install -m 0755 "$repo_dir/tx/start-wfb-tx.sh" /opt/openipc-fpv/tx/start-wfb-tx.sh
+install -m 0755 "$repo_dir/tx/run-tx-test.sh" /opt/openipc-fpv/tx/run-tx-test.sh
 install -m 0755 "$repo_dir/tx/tx-preflight.sh" /opt/openipc-fpv/tx/tx-preflight.sh
 install -m 0755 "$repo_dir/tx/install-tx-deps.sh" /opt/openipc-fpv/tx/install-tx-deps.sh
 install -m 0755 "$repo_dir/tx/install-wfb-ng-standalone.sh" /opt/openipc-fpv/tx/install-wfb-ng-standalone.sh
@@ -44,6 +45,7 @@ echo "  3. Edit /etc/default/wifibroadcast and set WFB_NICS to your radio interf
 echo "  4. Run /opt/openipc-fpv/tx/prepare-wfb-radio.sh wlanX for that interface."
 echo "  5. Copy matching /etc/drone.key and /etc/gs.key from the same wfb_keygen run."
 echo "  6. Run: /opt/openipc-fpv/tx/tx-preflight.sh"
-echo "  7. Enable with:"
+echo "  7. Quick test with: /opt/openipc-fpv/tx/run-tx-test.sh"
+echo "  8. Enable with:"
 echo "       systemctl enable --now openipc-video-tx.service"
 echo "       systemctl enable --now openipc-wfb-tx.service"

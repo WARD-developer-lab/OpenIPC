@@ -23,30 +23,34 @@ else
 fi
 
 echo "Scanning WFB radio ports: ${ports[*]}"
-echo "Each port will run for ${seconds}s. Watch RX and stop with Ctrl+C when it works."
+echo "Each port will run for ${seconds}s."
+echo "The scan repeats forever. Watch RX and stop with Ctrl+C when it works."
 
-for port in "${ports[@]}"; do
-  echo
-  echo "============================================================"
-  echo "Testing WFB radio port ${port}"
-  echo "============================================================"
+cycle=1
 
-  if [ -f /etc/default/wifibroadcast ]; then
-    if grep -q '^WFB_RADIO_PORT=' /etc/default/wifibroadcast; then
-      sed -i "s/^WFB_RADIO_PORT=.*/WFB_RADIO_PORT=\"${port}\"/" /etc/default/wifibroadcast
-    else
-      printf '\nWFB_RADIO_PORT="%s"\n' "$port" >> /etc/default/wifibroadcast
+while true; do
+  for port in "${ports[@]}"; do
+    echo
+    echo "============================================================"
+    echo "Cycle ${cycle}: testing WFB radio port ${port}"
+    echo "============================================================"
+
+    if [ -f /etc/default/wifibroadcast ]; then
+      if grep -q '^WFB_RADIO_PORT=' /etc/default/wifibroadcast; then
+        sed -i "s/^WFB_RADIO_PORT=.*/WFB_RADIO_PORT=\"${port}\"/" /etc/default/wifibroadcast
+      else
+        printf '\nWFB_RADIO_PORT="%s"\n' "$port" >> /etc/default/wifibroadcast
+      fi
     fi
-  fi
 
-  timeout --foreground "${seconds}" /opt/openipc-fpv/tx/run-tx-test.sh test "$port" || status="$?"
-  status="${status:-0}"
+    timeout --foreground "${seconds}" /opt/openipc-fpv/tx/run-tx-test.sh test "$port" || status="$?"
+    status="${status:-0}"
 
-  if [ "$status" != "124" ] && [ "$status" != "130" ] && [ "$status" != "143" ] && [ "$status" != "0" ]; then
-    echo "Port ${port} test exited with status ${status}; continuing."
-  fi
-  unset status
+    if [ "$status" != "124" ] && [ "$status" != "130" ] && [ "$status" != "143" ] && [ "$status" != "0" ]; then
+      echo "Port ${port} test exited with status ${status}; continuing."
+    fi
+    unset status
+  done
+
+  cycle=$((cycle + 1))
 done
-
-echo
-echo "Scan finished. If RX never woke up, the issue is probably not radio port."
